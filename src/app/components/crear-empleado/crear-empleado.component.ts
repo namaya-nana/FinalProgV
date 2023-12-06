@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from 'src/app/services/empleado.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crear-empleado',
@@ -11,7 +12,7 @@ import { EmpleadoService } from 'src/app/services/empleado.service';
 export class CrearEmpleadoComponent {
   empleadoForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private empleadoService: EmpleadoService) { 
+  constructor(private fb: FormBuilder, private empleadoService: EmpleadoService, private router: Router) { 
       this.empleadoForm = this.fb.group({
           Nombre: ['', Validators.required],
           Apellido: ['', Validators.required],
@@ -41,6 +42,9 @@ export class CrearEmpleadoComponent {
       this.empleadoService.agregarEmpleado(nuevoEmpleado).then(() => {
         // Limpiar el formulario después de agregar el empleado
         this.empleadoForm.reset();
+         // Redirigir a la vista de listar empleados
+        this.router.navigate(['']); // Ruta configurada como '' en tu AppRoutingModule    
+        
       }).catch(error => {
         console.error('Error al agregar empleado:', error);
         // Manejar el error de manera apropiada (puedes mostrar un mensaje al usuario, etc.)
