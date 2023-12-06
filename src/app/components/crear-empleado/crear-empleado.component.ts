@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Router } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr'
 @Component({
   selector: 'app-crear-empleado',
   templateUrl: './crear-empleado.component.html',
@@ -12,7 +12,10 @@ import { Router } from '@angular/router';
 export class CrearEmpleadoComponent {
   empleadoForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private empleadoService: EmpleadoService, private router: Router) { 
+  constructor(private fb: FormBuilder, 
+    private empleadoService: EmpleadoService, 
+    private router: Router,
+    private toastr: ToastrService) { 
       this.empleadoForm = this.fb.group({
           Nombre: ['', Validators.required],
           Apellido: ['', Validators.required],
@@ -42,6 +45,8 @@ export class CrearEmpleadoComponent {
       this.empleadoService.agregarEmpleado(nuevoEmpleado).then(() => {
         // Limpiar el formulario después de agregar el empleado
         this.empleadoForm.reset();
+        // mensaje de carga exitosa
+        this.toastr.success('El empleado fue ingresado con exito!', 'Empleado ingresado!');
          // Redirigir a la vista de listar empleados
         this.router.navigate(['']); // Ruta configurada como '' en tu AppRoutingModule    
         
