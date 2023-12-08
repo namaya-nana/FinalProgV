@@ -14,8 +14,6 @@ import { environment } from '../environments/environment';
 import { CrearEmpleadoComponent } from './components/crear-empleado/crear-empleado.component';
 import { ListarEmpleadoComponent } from './components/listar-empleado/listar-empleado.component';
 
-
-
 @NgModule({
   declarations: [
     AppComponent,

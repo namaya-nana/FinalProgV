@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Empleado } from 'src/app/models/empleado';
 import { EmpleadoService } from 'src/app/services/empleado.service';
 import { Router } from '@angular/router';
-import { ToastrService } from 'ngx-toastr'
+import { ToastrService } from 'ngx-toastr';
+
 @Component({
   selector: 'app-crear-empleado',
   templateUrl: './crear-empleado.component.html',

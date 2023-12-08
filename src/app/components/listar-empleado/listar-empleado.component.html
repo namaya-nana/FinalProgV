@@ -1,35 +1,45 @@
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-8 offset-lg-2">
-            <div class="card">
-                <div class="card-body text-center">
-                    <span class="titulo">LISTADO DE EMPLEADOS</span>
-                    <button class="btn btn-success float-end" routerLink="/crear-empleado" >NUEVO</button>
-                    <table class="table table-striped mt-3">
-                        <thead>
-                          <tr>
-                            <th scope="col">Nombre</th>
-                            <th scope="col">Apellido</th>
-                            <th scope="col">DNI</th>
-                            <th scope="col">Domicilio</th>
-                            <th scope="col"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr *ngFor="let empleado of empleados$ | async">
-                            <td>{{ empleado.Nombre }}</td>
-                            <td>{{ empleado.Apellido }}</td>
-                            <td>{{ empleado.DNI }}</td>
-                            <td>{{ empleado.Domicilio }}</td>
-                            <td>
-                              <i class="fas fa-edit text-primary"></i>
-                              <i class="fas fa-trash text-danger"></i>
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
-                </div>
-            </div>
-        </div>
-    </div>
+  <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+          <div class="card">
+              <div class="card-body text-center">
+                  <span class="titulo">LISTADO DE EMPLEADOS</span>
+                  <button class="btn btn-success float-end" routerLink="/crear-empleado" >NUEVO</button>
+                  <table class="table table-striped mt-3">
+                      <thead>
+                        <tr>
+                          <th scope="col">Nombre</th>
+                          <th scope="col">Apellido</th>
+                          <th scope="col">DNI</th>
+                          <th scope="col">Domicilio</th>
+                          <th scope="col"></th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let empleado of empleados$ | async">
+                          <td>{{ empleado.Nombre }}</td>
+                          <td>{{ empleado.Apellido }}</td>
+                          <td>{{ empleado.DNI }}</td>
+                          <td>{{ empleado.Domicilio }}</td>
+                          <td>
+                            <i (click)="seleccionarEmpleadoParaModificar(empleado)" class="fas fa-edit text-primary"></i>
+                            <i (click)="eliminarEmpleado(empleado)" class="fas fa-trash text-danger"></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+<!-- Agregar una sección para modificar el empleado seleccionado -->
+<div *ngIf="empleadoAModificar !== null">
+<h3>Modificar Empleado</h3>
+<label>Nombre:</label>
+<input [(ngModel)]="empleadoAModificar.Nombre" placeholder="Nombre">
+<!-- Agregar más campos para modificar -->
+
+<button (click)="guardarModificacion()">Guardar</button>
+<button (click)="cancelarModificacion()">Cancelar</button>
 </div>
