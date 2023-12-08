@@ -8,7 +8,7 @@ import { CrearEmpleadoComponent } from './components/crear-empleado/crear-emplea
 const routes: Routes = [
   { path: '', component: ListarEmpleadoComponent },
   { path: 'crear-empleado', component: CrearEmpleadoComponent },
-  { path: 'editar-empleado/:id', component: CrearEmpleadoComponent },
+  { path: 'crear-empleado/:key', component: CrearEmpleadoComponent }, // Nueva ruta para edición
   { path: '**', redirectTo: '', pathMatch: 'full' }
 ];
 console.log(routes);

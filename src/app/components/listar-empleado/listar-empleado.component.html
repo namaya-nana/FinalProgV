@@ -33,13 +33,3 @@
       </div>
   </div>
 </div>
-<!-- Agregar una sección para modificar el empleado seleccionado -->
-<div *ngIf="empleadoAModificar !== null">
-<h3>Modificar Empleado</h3>
-<label>Nombre:</label>
-<input [(ngModel)]="empleadoAModificar.Nombre" placeholder="Nombre">
-<!-- Agregar más campos para modificar -->
-
-<button (click)="guardarModificacion()">Guardar</button>
-<button (click)="cancelarModificacion()">Cancelar</button>
-</div>

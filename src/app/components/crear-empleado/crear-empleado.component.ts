@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Empleado } from 'src/app/models/empleado';
+import { Empleado, EmpleadoWithKey } from 'src/app/models/empleado';
 import { EmpleadoService } from 'src/app/services/empleado.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute  } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-crear-empleado',
@@ -12,10 +13,14 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class CrearEmpleadoComponent {
   empleadoForm: FormGroup;
+  //agregados 
+  isEditMode: boolean = false;
+  empleadoAModificar: EmpleadoWithKey | null = null;
 
   constructor(private fb: FormBuilder, 
     private empleadoService: EmpleadoService, 
-    private router: Router,
+    private router: Router,  // Cambia ActivatedRoute por Router
+    private route: ActivatedRoute,
     private toastr: ToastrService) { 
       this.empleadoForm = this.fb.group({
           Nombre: ['', Validators.required],
@@ -25,39 +30,55 @@ export class CrearEmpleadoComponent {
       })
   }
 
-  ngOnInit(): void {}
+  ngOnInit() {
+    // Verificar si se proporciona un 'key' en la ruta para determinar si estás en modo edición
+    this.route.params.subscribe(params => {
+      if (params['key']) {
+        const empleadoKey = params['key'];
+        this.isEditMode = true;
+  
+        // Obtener el empleado a editar y cargar sus datos en el formulario
+        this.empleadoService.getEmpleadoById(empleadoKey).subscribe(empleado => {
+          if (empleado) {
+            this.empleadoAModificar = empleado;
+            this.empleadoForm.setValue({
+              Nombre: empleado.Nombre,
+              Apellido: empleado.Apellido,
+              DNI: empleado.DNI,
+              Domicilio: empleado.Domicilio
+            });
+          } else {
+            console.error('El empleado no fue encontrado.');
+          }
+        });
+      }
+    });
+  }
 
-  // Agregar un nuevo empleado
-  agregarEmpleado() {
-    const nombreControl = this.empleadoForm.get('Nombre');
-    const apellidoControl = this.empleadoForm.get('Apellido');
-    const dniControl = this.empleadoForm.get('DNI');
-    const domicilioControl = this.empleadoForm.get('Domicilio');
-
-    if (nombreControl && apellidoControl && dniControl && domicilioControl) {
-      const nuevoEmpleado: Empleado = {
-        Nombre: nombreControl.value,
-        Apellido: apellidoControl.value,
-        DNI: dniControl.value,
-        Domicilio: domicilioControl.value,
+  agregarOEditarEmpleado(): void {
+    if (this.isEditMode && this.empleadoAModificar !== null) {
+      const empleadoEditado: EmpleadoWithKey = {
+        ...this.empleadoAModificar,
+        ...this.empleadoForm.value
       };
 
-      // Llamar al servicio para agregar el empleado
-      this.empleadoService.agregarEmpleado(nuevoEmpleado).then(() => {
-        // Limpiar el formulario después de agregar el empleado
-        this.empleadoForm.reset();
-        // mensaje de carga exitosa
-        this.toastr.success('El empleado fue ingresado con exito!', 'Empleado ingresado!');
-         // Redirigir a la vista de listar empleados
-        this.router.navigate(['']); // Ruta configurada como '' en tu AppRoutingModule    
-        
+      this.empleadoService.editarEmpleado(empleadoEditado).then(() => {
+        this.toastr.success('Empleado editado con éxito', 'Editado');
+        this.router.navigate(['']); // Redirigir a la vista de listar empleados
       }).catch(error => {
-        console.error('Error al agregar empleado:', error);
-        // Manejar el error de manera apropiada (puedes mostrar un mensaje al usuario, etc.)
+        console.error('Error al editar el empleado:', error);
+        this.toastr.error('Error al editar el empleado', 'Error');
       });
     } else {
-      // Marcar campos del formulario como tocados para mostrar mensajes de validación
-      this.empleadoForm.markAllAsTouched();
+      const nuevoEmpleado: Empleado = this.empleadoForm.value;
+
+      this.empleadoService.agregarEmpleado(nuevoEmpleado).then(() => {
+        this.toastr.success('Empleado agregado con éxito', 'Agregado');
+        this.router.navigate(['']); // Redirigir a la vista de listar empleados
+      }).catch(error => {
+        console.error('Error al agregar el empleado:', error);
+        this.toastr.error('Error al agregar el empleado', 'Error');
+      });
     }
   }
 }
