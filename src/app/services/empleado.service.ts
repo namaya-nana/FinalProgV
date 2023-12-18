@@ -30,7 +30,8 @@ export class EmpleadoService {
       );
     }
   
-    getEmpleados(): Observable<{ key: string | null, Nombre: string, Apellido: string, DNI: number, Domicilio: string }[]> {
+    getEmpleados(): Observable<{ key: string | null, Nombre: string, 
+      Apellido: string, DNI: number, Domicilio: string }[]> {
       return this.empleados$;
     }
 
@@ -44,7 +45,8 @@ export class EmpleadoService {
       eliminarEmpleado(empleadoId: string): Promise<void> {
         return this.db.list('/Empleado').remove(empleadoId);
       }
-
+      
+      //Busca al empleado por la clave
       getEmpleadoById(empleadoId: string): Observable<EmpleadoWithKey | null> {
         return this.empleados$.pipe(
           map(empleados => empleados.find(empleado => empleado.key === empleadoId) || null)

@@ -19,7 +19,7 @@ export class ListarEmpleadoComponent implements OnInit {
 
   constructor(private empleadoService: EmpleadoService, 
     private toastr: ToastrService,
-    private router: Router,  // Agrega el Router aquí
+    private router: Router, 
     private route: ActivatedRoute
    ) {
     this.empleados$ = new Observable<EmpleadoWithKey[]>();
